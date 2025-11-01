@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reaction Time Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #222;
+            color: white;
+            margin-top: 100px;
+        }
+
+        button {
+            font-size: 20px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            background-color: red;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #message {
+            font-size: 24px;
+            margin: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Click the Button When It Turns Green!</h1>
+    <p id="message">Wait for it...</p>
+    <button id="gameButton">Wait...</button>
+
+    <script>
+        const button = document.getElementById("gameButton");
+        const message = document.getElementById("message");
+        let startTime, timeout, isReady = false;
+
+        function startGame() {
+            button.disabled = true;
+            button.style.backgroundColor = "red";
+            button.textContent = "Wait...";
+            message.textContent = "Get ready...";
+
+            const randomDelay = Math.floor(Math.random() * 3000) + 2000;
+
+            timeout = setTimeout(() => {
+                button.disabled = false;
+                button.style.backgroundColor = "green";
+                button.textContent = "CLICK!";
+                message.textContent = "Click now!";
+                startTime = Date.now();
+                isReady = true;
+            }, randomDelay);
+        }
+
+        button.addEventListener("click", () => {
+            if (!isReady) {
+                clearTimeout(timeout);
+                message.textContent = "Too soon! Try again.";
+                button.textContent = "Restart";
+                button.style.backgroundColor = "red";
+                isReady = false;
+                setTimeout(startGame, 1000);
+            } else {
+                const reactionTime = Date.now() - startTime;
+                message.textContent = `Your reaction time: ${reactionTime} ms`;
+                button.textContent = "Play again";
+                button.style.backgroundColor = "blue";
+                isReady = false;
+                setTimeout(startGame, 1500);
+            }
+        });
+
+        // Start the game automatically
+        startGame();
+    </script>
+</body>
+
+</html>
